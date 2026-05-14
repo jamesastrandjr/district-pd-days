@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>District PD Days — 2026–27 School Year</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B6B6B;
+    --text-muted: #9A9A9A;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  header {
+    max-width: 960px;
+    margin: 0 auto 2rem;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* Legend */
+  .legend-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .legend-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .legend-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Filters */
+  .filters-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filters-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .filter-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .filter-btn {
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(0,0,0,0.12);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: 400;
+  }
+
+  .filter-btn:hover {
+    border-color: rgba(0,0,0,0.25);
+    background: rgba(0,0,0,0.03);
+  }
+
+  .filter-btn.active {
+    color: #fff;
+    border-color: transparent;
+  }
+
+  /* Calendar */
+  .month-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+
+  .month-header {
+    padding: 10px 1.25rem;
+    background: #F2F1ED;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+
+  .date-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 12px;
+    padding: 10px 1.25rem;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+  }
+
+  .date-row:last-child {
+    border-bottom: none;
+  }
+
+  .date-label {
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    padding: 0 2px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .date-row { grid-template-columns: 90px 1fr; gap: 8px; }
+    h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="header-tag">Erie County Intermediate Unit · ESC</div>
+    <h1>District PD Days</h1>
+    <p class="subtitle">2026–27 School Year — at a glance</p>
+  </header>
+
+  <div class="stats-bar" id="stats"></div>
+
+  <div class="legend-card">
+    <div class="legend-title">Districts</div>
+    <div class="legend-grid" id="legend"></div>
+  </div>
+
+  <div class="filters-card">
+    <div class="filters-title">Filter by district</div>
+    <div class="filter-wrap" id="filters"></div>
+  </div>
+
+  <div id="calendar"></div>
+</div>
+
+<script>
+const raw = [
+  ["North East","8/18/2026"],["Girard","8/19/2026"],["General McLane","8/19/2026"],["Harbor Creek","8/19/2026"],["North East","8/19/2026"],
+  ["Fort LeBoeuf","8/20/2026"],["Girard","8/20/2026"],["General McLane","8/20/2026"],["Harbor Creek","8/20/2026"],["Iroquois","8/20/2026"],
+  ["Union City","8/20/2026"],["Warren County","8/20/2026"],["Wattsburg","8/20/2026"],["North East","8/20/2026"],["Northwestern","8/20/2026"],["Montessori","8/20/2026"],
+  ["Fort LeBoeuf","8/21/2026"],["Girard","8/21/2026"],["Harbor Creek","8/21/2026"],["Iroquois","8/21/2026"],["Union City","8/21/2026"],["Warren County","8/21/2026"],["Wattsburg","8/21/2026"],["Montessori","8/21/2026"],
+  ["Fort LeBoeuf","8/24/2026"],["General McLane","8/24/2026"],["Harbor Creek","8/24/2026"],["Union City","8/24/2026"],["Warren County","8/24/2026"],["Corry","8/24/2026"],["Northwestern","8/24/2026"],
+  ["Corry","8/25/2026"],["Montessori","8/25/2026"],
+  ["Fairview","8/27/2026"],["Millcreek","8/27/2026"],["Fairview","8/28/2026"],["Fairview","8/31/2026"],["Conneaut","8/31/2026"],["Crawford Central","8/31/2026"],["PENNCREST","8/31/2026"],
+  ["Conneaut","9/1/2026"],["Crawford Central","9/1/2026"],["PENNCREST","9/1/2026"],
+  ["Union City","10/9/2026"],
+  ["Fairview","10/12/2026"],["Fort LeBoeuf","10/12/2026"],["Girard","10/12/2026"],["General McLane","10/12/2026"],["Harbor Creek","10/12/2026"],["Iroquois","10/12/2026"],["Millcreek","10/12/2026"],["Union City","10/12/2026"],["Warren County","10/12/2026"],["Wattsburg","10/12/2026"],["Conneaut","10/12/2026"],["Corry","10/12/2026"],["Crawford Central","10/12/2026"],["North East","10/12/2026"],["Northwestern","10/12/2026"],["Montessori","10/12/2026"],["PENNCREST","10/12/2026"],
+  ["North East","10/13/2026"],
+  ["Northwestern","10/29/2026"],["Harbor Creek","10/30/2026"],["Conneaut","10/30/2026"],["Northwestern","10/30/2026"],["Montessori","10/30/2026"],["PENNCREST","10/30/2026"],
+  ["Corry","11/2/2026"],["Fort LeBoeuf","11/5/2026"],["Fort LeBoeuf","11/6/2026"],["Girard","11/6/2026"],["General McLane","11/6/2026"],
+  ["Harbor Creek","11/9/2026"],["Millcreek","11/9/2026"],
+  ["Fort LeBoeuf","1/15/2027"],["Warren County","1/15/2027"],["Northwestern","1/15/2027"],
+  ["Warren County","1/18/2027"],["Corry","1/18/2027"],["North East","1/18/2027"],["PENNCREST","1/18/2027"],
+  ["Harbor Creek","1/19/2027"],["Conneaut","1/19/2027"],["Crawford Central","1/19/2027"],
+  ["Montessori","1/22/2027"],["Fairview","1/25/2027"],["PENNCREST","1/29/2027"],
+  ["Northwestern","2/11/2027"],["Fort LeBoeuf","2/12/2027"],["Girard","2/12/2027"],["General McLane","2/12/2027"],["Harbor Creek","2/12/2027"],["Iroquois","2/12/2027"],["Wattsburg","2/12/2027"],["North East","2/12/2027"],["Northwestern","2/12/2027"],
+  ["Millcreek","2/15/2027"],["Warren County","2/15/2027"],["Corry","2/15/2027"],["Fairview","2/15/2027"],
+  ["Warren County","3/8/2027"],["Girard","3/12/2027"],["Wattsburg","3/12/2027"],["Corry","3/15/2027"],
+  ["Northwestern","3/24/2027"],["Harbor Creek","3/25/2027"],["Union City","3/25/2027"],["Corry","3/30/2027"],
+  ["Fairview","4/5/2027"],["Millcreek","4/9/2027"],["Montessori","4/9/2027"],["Crawford Central","4/16/2027"],
+  ["Corry","5/7/2027"],["Harbor Creek","5/28/2027"],
+  ["Northwestern","6/3/2027"],["Fort LeBoeuf","6/4/2027"],["General McLane","6/4/2027"],["Harbor Creek","6/4/2027"],["Union City","6/4/2027"],["Corry","6/4/2027"],
+  ["General McLane","6/7/2027"],["Iroquois","6/7/2027"],["Fairview","6/10/2027"]
+];
+
+const districts = [...new Set(raw.map(r => r[0]))].sort();
+
+const colors = [
+  { fg: "#185FA5", bg: "#E6F1FB" },
+  { fg: "#0F6E56", bg: "#E1F5EE" },
+  { fg: "#993C1D", bg: "#FAECE7" },
+  { fg: "#993556", bg: "#FBEAF0" },
+  { fg: "#534AB7", bg: "#EEEDFE" },
+  { fg: "#3B6D11", bg: "#EAF3DE" },
+  { fg: "#854F0B", bg: "#FAEEDA" },
+  { fg: "#A32D2D", bg: "#FCEBEB" },
+  { fg: "#0C447C", bg: "#dbeaf8" },
+  { fg: "#085041", bg: "#d0ede4" },
+  { fg: "#712B13", bg: "#f8ddd4" },
+  { fg: "#72243E", bg: "#f7d9e5" },
+  { fg: "#3C3489", bg: "#e4e3fc" },
+  { fg: "#27500A", bg: "#dceec9" },
+  { fg: "#633806", bg: "#f5e2c2" },
+  { fg: "#791F1F", bg: "#fad8d8" },
+  { fg: "#0F6E56", bg: "#d0ede4" },
+];
+
+const colorMap = {};
+districts.forEach((d, i) => colorMap[d] = colors[i % colors.length]);
+
+let activeFilters = new Set(); // empty = show all
+
+function parseDateMap() {
+  const map = {};
+  raw.forEach(([d, dateStr]) => {
+    const [m, day, yr] = dateStr.split("/").map(Number);
+    const key = `${yr}-${String(m).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    if (!map[key]) map[key] = [];
+    if (!map[key].includes(d)) map[key].push(d);
+  });
+  return map;
+}
+
+function fmtDate(key) {
+  const [yr, m, d] = key.split("-");
+  return new Date(+yr, +m-1, +d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+
+function fmtMonth(key) {
+  const [yr, m, d] = key.split("-");
+  return new Date(+yr, +m-1, +d).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+}
+
+function buildLegend() {
+  const lg = document.getElementById("legend");
+  districts.forEach(d => {
+    const item = document.createElement("div");
+    item.className = "legend-item";
+    const dot = document.createElement("div");
+    dot.className = "legend-dot";
+    dot.style.background = colorMap[d].fg;
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(d));
+    lg.appendChild(item);
+  });
+}
+
+function updateButtonStyles() {
+  const wrap = document.getElementById("filters");
+  const clearBtn = wrap.querySelector("[data-d='clear']");
+  const noneSelected = activeFilters.size === 0;
+  clearBtn.style.background = noneSelected ? "#1A1A1A" : "";
+  clearBtn.style.color = noneSelected ? "#fff" : "";
+  clearBtn.style.borderColor = noneSelected ? "transparent" : "rgba(0,0,0,0.12)";
+
+  wrap.querySelectorAll(".filter-btn:not([data-d='clear'])").forEach(b => {
+    const isActive = activeFilters.has(b.dataset.d);
+    b.style.background = isActive ? colorMap[b.dataset.d].fg : "";
+    b.style.color = isActive ? "#fff" : "";
+    b.style.borderColor = isActive ? "transparent" : colorMap[b.dataset.d].fg + "66";
+  });
+}
+
+function buildFilters() {
+  const wrap = document.getElementById("filters");
+
+  const clearBtn = document.createElement("button");
+  clearBtn.className = "filter-btn";
+  clearBtn.textContent = "All districts";
+  clearBtn.dataset.d = "clear";
+  clearBtn.style.background = "#1A1A1A";
+  clearBtn.style.color = "#fff";
+  clearBtn.style.borderColor = "transparent";
+  wrap.appendChild(clearBtn);
+
+  districts.forEach(d => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn";
+    btn.textContent = d;
+    btn.dataset.d = d;
+    btn.style.borderColor = colorMap[d].fg + "66";
+    wrap.appendChild(btn);
+  });
+
+  wrap.addEventListener("click", e => {
+    const btn = e.target.closest(".filter-btn");
+    if (!btn) return;
+    if (btn.dataset.d === "clear") {
+      activeFilters.clear();
+    } else {
+      if (activeFilters.has(btn.dataset.d)) {
+        activeFilters.delete(btn.dataset.d);
+      } else {
+        activeFilters.add(btn.dataset.d);
+      }
+    }
+    updateButtonStyles();
+    render();
+  });
+}
+
+function buildStats(dateMap) {
+  const totalDates = new Set(raw.map(r => r[1])).size;
+  const bar = document.getElementById("stats");
+  bar.innerHTML = `
+    <div class="stat"><span class="stat-value">${districts.length}</span><span class="stat-label">Districts</span></div>
+    <div class="stat"><span class="stat-value">${totalDates}</span><span class="stat-label">PD days</span></div>
+    <div class="stat"><span class="stat-value">${raw.length}</span><span class="stat-label">Total entries</span></div>
+  `;
+}
+
+function render() {
+  const dateMap = parseDateMap();
+  const dates = Object.keys(dateMap).sort();
+
+  const months = {};
+  dates.forEach(dk => {
+    const mk = dk.slice(0, 7);
+    if (!months[mk]) months[mk] = [];
+    months[mk].push(dk);
+  });
+
+  const cal = document.getElementById("calendar");
+  cal.innerHTML = "";
+  let totalVisible = 0;
+
+  Object.entries(months).forEach(([mk, dks]) => {
+    const allInMonth = [...new Set(dks.flatMap(dk => dateMap[dk]))];
+    if (activeFilters.size > 0 && !allInMonth.some(d => activeFilters.has(d))) return;
+
+    const block = document.createElement("div");
+    block.className = "month-block";
+
+    const mh = document.createElement("div");
+    mh.className = "month-header";
+    mh.textContent = fmtMonth(dks[0]);
+    block.appendChild(mh);
+
+    let hasRows = false;
+    dks.forEach(dk => {
+      const list = dateMap[dk].filter(d => activeFilters.size === 0 || activeFilters.has(d));
+      if (!list.length) return;
+      hasRows = true;
+      totalVisible++;
+
+      const row = document.createElement("div");
+      row.className = "date-row";
+
+      const dl = document.createElement("div");
+      dl.className = "date-label";
+      dl.textContent = fmtDate(dk);
+
+      const chips = document.createElement("div");
+      chips.className = "chips";
+      list.forEach(d => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.style.background = colorMap[d].bg;
+        chip.style.color = colorMap[d].fg;
+        chip.textContent = d;
+        chips.appendChild(chip);
+      });
+
+      row.appendChild(dl);
+      row.appendChild(chips);
+      block.appendChild(row);
+    });
+
+    if (hasRows) cal.appendChild(block);
+  });
+
+  if (totalVisible === 0) {
+    cal.innerHTML = '<div class="empty-state">No PD days found for this district.</div>';
+  }
+}
+
+buildLegend();
+buildFilters();
+buildStats(parseDateMap());
+render();
+</script>
+</body>
+</html>
